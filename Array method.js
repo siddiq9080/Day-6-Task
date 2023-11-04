@@ -65,24 +65,22 @@ fetch('https://restcountries.com/v3.1/all')
 
   
 
-//5.Print the total population of countries using reduce function
+//5.Print the country that uses US dollars as currency.
 
-fetch('https://restcountries.com/v3.1/all')
-  .then(response => response.json())
-  .then(data => {
-   
-    const countryUsingUSD = data.find(country => {
-      if (country.currencies) {
-      
-        return Object.values(country.currencies).includes('USD');
-      }
-      return false;
-    });
+const xhr = new XMLHttpRequest();
 
-    if (countryUsingUSD) {
-      console.log("Country that uses US dollars:", countryUsingUSD.name.common);
-    } else {
-      console.log("No country uses US dollars as currency.");
-    }
-  })
-  .catch(error => console.log("Error fetching data:", error));
+xhr.open("GET", "https://restcountries.com/v3.1/all");
+
+xhr.send();
+
+xhr.onload = function () {
+  const response = JSON.parse(xhr.responseText);
+  console.log(response);
+  console.log(
+    response.filter((cty) => {
+      const { currencies = {} } = cty;
+     
+      return Object.keys(currencies).includes("USD");
+    })
+  );
+};
